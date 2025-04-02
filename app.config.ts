@@ -8,8 +8,13 @@ export default defineConfig({
     appDirectory: 'src',
   },
   vite: {
-    ssr: {
-      external: ['pino-pretty', 'lokijs', 'encoding']
+    resolve: {
+      alias: {
+        'string_decoder': 'string_decoder/',
+      }
+    },
+    ssr: { 
+      external: ['pino-pretty', 'lokijs', 'encoding'],
     },
     build: {
       rollupOptions: {
