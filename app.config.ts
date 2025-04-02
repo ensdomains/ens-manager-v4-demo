@@ -11,6 +11,7 @@ export default defineConfig({
     resolve: {
       alias: {
         'node:string_decoder': 'string_decoder/',
+        'node:string_decoder/': 'string_decoder/',
       }
     },
     ssr: { 
