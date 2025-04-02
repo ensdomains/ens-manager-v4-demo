@@ -8,12 +8,6 @@ export default defineConfig({
     appDirectory: 'src',
   },
   vite: {
-    resolve: {
-      alias: {
-        'node:string_decoder': 'string_decoder/',
-        'node:string_decoder/': 'string_decoder/',
-      }
-    },
     ssr: { 
       external: ['pino-pretty', 'lokijs', 'encoding'],
     },
@@ -31,6 +25,12 @@ export default defineConfig({
   },
   server: {
     preset: 'cloudflare-pages',
-    unenv: cloudflare,
+    unenv: {
+      ...cloudflare,
+      alias: {
+          ...cloudflare.alias,
+          "string_decoder/": "node:string_decoder",
+      },
+    },
   }
 })
