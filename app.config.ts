@@ -1,6 +1,7 @@
 import { defineConfig } from '@tanstack/react-start/config'
 import tsConfigPaths from 'vite-tsconfig-paths'
 import { vanillaExtractPlugin } from '@vanilla-extract/vite-plugin';
+import { cloudflare } from 'unenv'
 
 export default defineConfig({
   tsr: {
@@ -14,4 +15,8 @@ export default defineConfig({
       vanillaExtractPlugin()
     ],
   },
+  server: {
+    preset: 'cloudflare-pages',
+    unenv: cloudflare,
+  }
 })
