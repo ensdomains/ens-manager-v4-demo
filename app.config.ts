@@ -8,6 +8,11 @@ export default defineConfig({
     appDirectory: 'src',
   },
   vite: {
+    build:{
+      rollupOptions: {
+        external: ['pino-pretty', 'lokijs', 'encoding']
+      }
+    },
     plugins: [
       tsConfigPaths({
         projects: ['./tsconfig.json'],
