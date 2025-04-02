@@ -10,7 +10,7 @@ export default defineConfig({
   vite: {
     resolve: {
       alias: {
-        'string_decoder': 'string_decoder/',
+        'node:string_decoder': 'string_decoder/',
       }
     },
     ssr: { 
