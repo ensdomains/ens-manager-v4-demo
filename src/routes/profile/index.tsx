@@ -6,8 +6,8 @@ import { Address } from 'viem'
 import { getEnsName } from 'viem/actions'
 import { useAccount } from 'wagmi'
 import { Profile } from '~/components/Profile'
-import { getProfile, useProfile } from '~/ens'
-import { queryClient, wagmiConfig } from '~/wagmi'
+import { getProfile } from '~/ens'
+import { wagmiConfig } from '~/wagmi'
 
 const profileQueryOptions = (address: Address) =>
   queryOptions({

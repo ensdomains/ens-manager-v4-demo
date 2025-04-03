@@ -1,6 +1,5 @@
 import { Link } from '@tanstack/react-router'
 import * as styles from './Nav.css'
-import { ConnectButton } from '@rainbow-me/rainbowkit'
 
 export const Nav = () => {
   return (
