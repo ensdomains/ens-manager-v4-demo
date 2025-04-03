@@ -33,5 +33,10 @@ export default defineConfig({
           "string_decoder/": "node:string_decoder",
       },
     },
+    commonJS: {
+      // This fixes pngjs stream import but could break other modules in the future
+      // We may need to switch to a function that checks the importing file's id
+      requireReturnsDefault: "preferred",
+    }
   }
 })
