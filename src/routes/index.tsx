@@ -7,7 +7,6 @@ export const Route = createFileRoute('/')({
 })
 
 function Home() {
-  const { address } = useAccount()
   return (
     <div className='p-2'>
       <h1>Home</h1>
