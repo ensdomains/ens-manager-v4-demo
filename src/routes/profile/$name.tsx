@@ -1,15 +1,20 @@
 import { queryOptions } from '@tanstack/react-query'
 import { createFileRoute } from '@tanstack/react-router'
+import { safeTry } from 'neverthrow'
 import { Profile } from '~/components/Profile'
 import { getProfile } from '~/ens'
-import { queryClient, wagmiConfig } from '~/wagmi'
+import { getClient, queryClient } from '~/wagmi'
 
 const profileQueryOptions = (name: string) =>
   queryOptions({
     queryKey: [name],
     queryFn: async ({ queryKey: [name] }) => {
-      const client = wagmiConfig.getClient()
-      return await getProfile(client, name)
+      const result = await safeTry(async function* () {
+        const client = yield* getClient()
+        return await getProfile(client, name)
+      })
+      if (result.isErr()) throw result.error
+      return result.value
     },
   })
 
@@ -21,7 +26,6 @@ export const Route = createFileRoute('/profile/$name')({
   errorComponent: ({ error }) => (
     <main>
       <h1>Failed to fetch a profile</h1>
-      most likely got rate limited
       <summary>
         Full error message
         <details>{error.message}</details>

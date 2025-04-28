@@ -5,6 +5,8 @@ import { mainnet } from 'viem/chains'
 import { createClient, http, HttpTransport } from 'viem'
 import { addEnsContracts } from '@ensdomains/ensjs'
 import { QueryClient } from '@tanstack/react-query'
+import { err, ok, Result } from 'neverthrow'
+import { ClientWithEns } from '@ensdomains/ensjs/contracts'
 
 export const queryClient = new QueryClient({
   defaultOptions: {
@@ -32,3 +34,11 @@ export const wagmiConfig = createConfig({
     })
   },
 })
+
+export const getClient = (): Result<ClientWithEns, Error> => {
+  try {
+    return ok(wagmiConfig.getClient())
+  } catch (error) {
+    return err(error instanceof Error ? error : new Error('unknown error'))
+  }
+}

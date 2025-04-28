@@ -1,22 +1,32 @@
 import { ConnectButton } from '@rainbow-me/rainbowkit'
 import { queryOptions, useSuspenseQuery } from '@tanstack/react-query'
 import { createFileRoute } from '@tanstack/react-router'
+import { err, fromPromise, fromThrowable, ok, safeTry } from 'neverthrow'
 import { Suspense } from 'react'
-import { Address } from 'viem'
-import { getEnsName } from 'viem/actions'
+import type { Address } from 'viem/accounts'
+import { getEnsName, GetEnsNameErrorType } from 'viem/actions'
 import { useAccount } from 'wagmi'
 import { Profile } from '~/components/Profile'
-import { getProfile } from '~/ens'
-import { wagmiConfig } from '~/wagmi'
+import { getProfile, ProfileData } from '~/ens'
+import { getClient } from '~/wagmi'
 
 const profileQueryOptions = (address: Address) =>
   queryOptions({
     enabled: Boolean(address),
     queryKey: [address],
     queryFn: async ({ queryKey: [address] }) => {
-      const client = wagmiConfig.getClient()
-      const name = await getEnsName(client, { address })
-      return await getProfile(client, name)
+      const result = await safeTry(async function* () {
+        const client = yield* getClient()
+        const name = yield* fromPromise(getEnsName(client, { address }), (e) =>
+          err<never, GetEnsNameErrorType>(e as GetEnsNameErrorType))
+        const profile = yield* getProfile(client, name)
+
+        return ok({ ...profile, name } as ProfileData & { name: string })
+      })
+      if (result.isErr()) {
+        throw result.error
+      }
+      return result.value
     },
   })
 
@@ -29,7 +39,9 @@ const AccountProfile = ({ address }: { address: Address }) => {
 
   if (error) throw error
 
-  return <Profile name={address} data={data} />
+  const { name, ...profile } = data
+
+  return <Profile name={name} data={profile} />
 }
 
 function RouteComponent() {
